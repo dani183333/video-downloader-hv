@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111827">
+<title>Video Downloader</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b1020;color:#f8fafc;
+font-family:Arial,sans-serif;min-height:100vh}
+main{max-width:680px;margin:auto;padding:32px 18px}
+header{text-align:center;margin:24px 0 32px}
+.logo{font-size:42px}
+h1{font-size:32px;margin:12px 0}
+p{color:#aab6cc;line-height:1.6}
+.card{background:#151e31;border:1px solid #29364e;
+border-radius:18px;padding:22px;margin:18px 0}
+input{width:100%;padding:15px;border-radius:10px;
+border:1px solid #42516b;background:#0b1020;
+color:white;font-size:16px}
+button,.link{display:block;width:100%;padding:14px;
+border:0;border-radius:10px;background:#60a5fa;
+color:#08111f;font-size:16px;font-weight:bold;
+text-align:center;text-decoration:none;cursor:pointer}
+button{margin-top:12px}
+.platforms{display:flex;gap:8px;flex-wrap:wrap}
+.pill{background:#26344b;color:#dbeafe;border-radius:20px;
+padding:8px 12px;font-size:13px}
+#result{display:none}
+.note{font-size:13px;color:#aab6cc}
+footer{text-align:center;color:#8290a7;font-size:12px;
+padding:20px}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div class="logo">⬇️</div>
+<h1>Video Downloader</h1>
+<p>Tempel tautan video untuk mengenali platform
+dan melihat pilihan pengunduhan yang tersedia.</p>
+<div class="platforms" style="justify-content:center">
+<span class="pill">YouTube</span>
+<span class="pill">Facebook</span>
+<span class="pill">TikTok</span>
+</div>
+</header>
+
+<section class="card">
+<label for="url"><strong>Tautan video</strong></label>
+<p class="note">Gunakan tautan publik yang valid.</p>
+<input id="url" type="url" placeholder="https://..." autocomplete="url">
+<button id="check">Periksa tautan</button>
+<p class="note">Tidak perlu memasukkan kata sandi akun.</p>
+</section>
+
+<section id="result" class="card" aria-live="polite">
+<h2 id="heading">Hasil pemeriksaan</h2>
+<p id="message"></p>
+<a id="official" class="link" href="#"
+target="_blank" rel="noopener noreferrer">Buka layanan resmi</a>
+</section>
+
+<section class="card">
+<h3>Cara kerja</h3>
+<p>1. Tempel tautan video.</p>
+<p>2. Website mendeteksi platform.</p>
+<p>3. Ikuti pilihan pengunduhan resmi yang tersedia.</p>
+</section>
+
+<footer>
+Gunakan hanya konten yang kamu miliki atau diizinkan
+untuk diunduh. Website ini tidak menyimpan URL ke server.
+</footer>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+
+$("check").addEventListener("click", () => {
+  const raw = $("url").value.trim();
+  let u;
+
+  try {
+    u = new URL(raw);
+    if (u.protocol !== "https:" && u.protocol !== "http:")
+      throw Error();
+  } catch {
+    alert("Masukkan URL video yang valid.");
+    return;
+  }
+
+  const host = u.hostname.toLowerCase()
+    .replace(/^www\./, "");
+  let platform, message, officialUrl;
+
+  if (["youtube.com","m.youtube.com","youtu.be",
+       "music.youtube.com"].includes(host)) {
+    platform = "YouTube";
+    message = "Gunakan fitur unduh yang tersedia atau YouTube Studio untuk video milikmu.";
+    officialUrl = "https://studio.youtube.com/";
+  } else if (["facebook.com","m.facebook.com",
+              "fb.watch","web.facebook.com"].includes(host)) {
+    platform = "Facebook";
+    message = "Untuk video milikmu, periksa opsi unduh atau ekspor informasi akun yang disediakan Facebook.";
+    officialUrl = "https://www.facebook.com/";
+  } else if (["tiktok.com","m.tiktok.com",
+              "vm.tiktok.com","vt.tiktok.com"].includes(host)) {
+    platform = "TikTok";
+    message = "Buka video di TikTok dan gunakan Simpan video jika kreator mengizinkannya.";
+    officialUrl = "https://www.tiktok.com/";
+  } else {
+    alert("Domain belum didukung. Periksa kembali tautannya.");
+    return;
+  }
+
+  $("heading").textContent = "Platform terdeteksi: " + platform;
+  $("message").textContent = message;
+  $("official").href = officialUrl;
+  $("result").style.display = "block";
+  $("result").scrollIntoView({behavior:"smooth"});
+});
+</script>
+</body>
+</html>
