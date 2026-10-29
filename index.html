@@ -2,237 +2,235 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#111827">
-<title>Video Downloader</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#0b1020;color:#f8fafc;
-font-family:Arial,sans-serif;min-height:100vh}
-main{max-width:680px;margin:auto;padding:32px 18px}
-header{text-align:center;margin:24px 0 32px}
-.logo{font-size:42px}
-h1{font-size:32px;margin:12px 0}
-p{color:#aab6cc;line-height:1.6}
-.card{background:#151e31;border:1px solid #29364e;
-border-radius:18px;padding:22px;margin:18px 0}
-input{width:100%;padding:15px;border-radius:10px;
-border:1px solid #42516b;background:#0b1020;
-color:white;font-size:16px}
-button,.link{display:block;width:100%;padding:14px;
-border:0;border-radius:10px;background:#60a5fa;
-color:#08111f;font-size:16px;font-weight:bold;
-text-align:center;text-decoration:none;cursor:pointer}
-button{margin-top:12px}
-.platforms{display:flex;gap:8px;flex-wrap:wrap}
-.pill{background:#26344b;color:#dbeafe;border-radius:20px;
-padding:8px 12px;font-size:13px}
-#result{display:none}
-.note{font-size:13px;color:#aab6cc}
-footer{text-align:center;color:#8290a7;font-size:12px;
-padding:20px}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111827">
+  <meta name="description" content="Periksa tautan video dan temukan pilihan akses atau pengunduhan yang tersedia secara resmi.">
+  <title>Video Downloader HV</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #0b1020;
+      color: #f8fafc;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+    }
+
+    main {
+      max-width: 680px;
+      margin: auto;
+      padding: 32px 18px;
+    }
+
+    header {
+      text-align: center;
+      margin: 24px 0 32px;
+    }
+
+    .logo { font-size: 42px; }
+
+    h1 { font-size: 32px; margin: 12px 0; }
+
+    p { color: #aab6cc; line-height: 1.6; }
+
+    .card {
+      background: #151e31;
+      border: 1px solid #29364e;
+      border-radius: 18px;
+      padding: 22px;
+      margin: 18px 0;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #42516b;
+      background: #0b1020;
+      color: white;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    button, .link {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      border: 0;
+      border-radius: 10px;
+      background: #60a5fa;
+      color: #08111f;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    button { margin-top: 12px; }
+
+    button:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    .platforms {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .pill {
+      background: #26344b;
+      color: #dbeafe;
+      border-radius: 20px;
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+
+    .note, footer {
+      font-size: 13px;
+      color: #aab6cc;
+    }
+
+    #result[hidden], #action[hidden] { display: none; }
+
+    .link { margin-top: 14px; }
+
+    footer {
+      text-align: center;
+      color: #8290a7;
+      padding: 20px 0;
+      line-height: 1.6;
+    }
+
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 2px solid #93c5fd;
+      outline-offset: 3px;
+    }
+  </style>
 </head>
+
 <body>
 <main>
-<header>
-<div class="logo">⬇️</div>
-<h1>Video Downloader</h1>
-<p>Tempel tautan video untuk mengenali platform
-dan melihat pilihan pengunduhan yang tersedia.</p>
-<div class="platforms" style="justify-content:center">
-<span class="pill">YouTube</span>
-<span class="pill">Facebook</span>
-<span class="pill">TikTok</span>
-</div>
-</header>
+  <header>
+    <div class="logo" aria-hidden="true">⬇️</div>
+    <h1>Video Downloader HV</h1>
+    <p>
+      Tempel tautan video untuk mengenali platform
+      dan memeriksa pilihan akses yang tersedia.
+    </p>
 
-<section class="card">
-<label for="url"><strong>Tautan video</strong></label>
-<p class="note">Gunakan tautan publik yang valid.</p>
-<input id="url" type="url" placeholder="https://..." autocomplete="url">
-<button id="check">Periksa tautan</button>
-<p class="note">Tidak perlu memasukkan kata sandi akun.</p>
-</section>
+    <div class="platforms">
+      <span class="pill">YouTube</span>
+      <span class="pill">Facebook</span>
+      <span class="pill">TikTok</span>
+      <span class="pill">URL video langsung</span>
+    </div>
+  </header>
 
-<section id="result" class="card" aria-live="polite">
-<h2 id="heading">Hasil pemeriksaan</h2>
-<p id="message"></p>
-<a id="official" class="link" href="#"
-target="_blank" rel="noopener noreferrer">Buka layanan resmi</a>
-</section>
+  <section class="card">
+    <form id="download-form">
+      <label for="url"><strong>Tautan video</strong></label>
+      <p class="note">
+        Masukkan URL publik. Tidak perlu memasukkan kata sandi.
+      </p>
 
-<section class="card">
-<h3>Cara kerja</h3>
-<p>1. Tempel tautan video.</p>
-<p>2. Website mendeteksi platform.</p>
-<p>3. Ikuti pilihan pengunduhan resmi yang tersedia.</p>
-</section>
+      <input
+        id="url"
+        name="url"
+        type="url"
+        placeholder="https://..."
+        maxlength="2048"
+        autocomplete="url"
+        required
+      >
 
-<footer>
-Gunakan hanya konten yang kamu miliki atau diizinkan
-untuk diunduh. Website ini tidak menyimpan URL ke server.
-</footer>
+      <button id="check" type="submit">Periksa tautan</button>
+      <p id="status" class="note" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <section id="result" class="card" aria-live="polite" hidden>
+    <h2 id="heading">Hasil pemeriksaan</h2>
+    <p id="message"></p>
+    <a
+      id="action"
+      class="link"
+      href="#"
+      target="_blank"
+      rel="noopener noreferrer"
+      hidden
+    >Buka tautan</a>
+  </section>
+
+  <section class="card">
+    <h3>Cara kerja</h3>
+    <p>1. Tempel tautan video.</p>
+    <p>2. Backend memeriksa jenis URL.</p>
+    <p>3. Ikuti pilihan akses atau pengunduhan yang tersedia.</p>
+  </section>
+
+  <footer>
+    Gunakan hanya konten yang kamu miliki atau diizinkan untuk diunduh.
+    Website ini tidak menyimpan URL ke server sebagai riwayat.
+  </footer>
 </main>
-<script>
-const API =
-  "https://video-downloader-api.dham3830.workers.dev/api/inspect";
-
-$("check").addEventListener("click", () => {
-  const raw = $("url").value.trim();
-  let u;
-
-  try {
-    u = new URL(raw);
-    if (u.protocol !== "https:" && u.protocol !== "http:")
-      throw Error();
-  } catch {
-    alert("Masukkan URL video yang valid.");
-    return;
-  }
-
-  const host = u.hostname.toLowerCase()
-    .replace(/^www\./, "");
-  let platform, message, officialUrl;
-
-  if (["youtube.com","m.youtube.com","youtu.be",
-       "music.youtube.com"].includes(host)) {
-    platform = "YouTube";
-    message = "Gunakan fitur unduh yang tersedia atau YouTube Studio untuk video milikmu.";
-    officialUrl = "https://studio.youtube.com/";
-  } else if (["facebook.com","m.facebook.com",
-              "fb.watch","web.facebook.com"].includes(host)) {
-    platform = "Facebook";
-    message = "Untuk video milikmu, periksa opsi unduh atau ekspor informasi akun yang disediakan Facebook.";
-    officialUrl = "https://www.facebook.com/";
-  } else if (["tiktok.com","m.tiktok.com",
-              "vm.tiktok.com","vt.tiktok.com"].includes(host)) {
-    platform = "TikTok";
-    message = "Buka video di TikTok dan gunakan Simpan video jika kreator mengizinkannya.";
-    officialUrl = "https://www.tiktok.com/";
-  } else {
-    alert("Domain belum didukung. Periksa kembali tautannya.");
-    return;
-  }
-
-  $("heading").textContent = "Platform terdeteksi: " + platform;
-  $("message").textContent = message;
-  $("official").href = officialUrl;
-  $("result").style.display = "block";
-  $("result").scrollIntoView({behavior:"smooth"});
-});
-</script>
-
-<section id="cloud-checker" style="max-width:680px;margin:32px auto;padding:24px;font-family:Arial,sans-serif;background:#171923;color:#fff;border-radius:16px">
-  <h2>Video Downloader HV</h2>
-  <p>Periksa tautan platform atau URL file video langsung.</p>
-
-  <form id="cloud-form">
-    <input id="cloud-url" type="url" required maxlength="2048"
-      placeholder="Tempel URL video di sini"
-      style="box-sizing:border-box;width:100%;padding:14px;border-radius:8px;border:1px solid #555;margin:8px 0 12px" />
-    <button id="cloud-submit" type="submit"
-      style="width:100%;padding:14px;border:0;border-radius:8px;background:#7c5cff;color:white;font-weight:bold">
-      Periksa tautan
-    </button>
-  </form>
-
-  <p id="cloud-status" role="status" aria-live="polite"></p>
-
-  <div id="cloud-result" hidden>
-    <p>Jenis tautan: <strong id="cloud-platform"></strong></p>
-    <p id="cloud-message"></p>
-    <a id="cloud-action" target="_blank" rel="noopener noreferrer"
-      style="display:inline-block;padding:12px;background:#257a50;color:white;border-radius:8px"
-      hidden>Buka tautan</a>
-  </div>
-</section>
 
 <script>
 (() => {
-  const API = "https://video-downloader-api.dham3830.workers.dev/api/inspect";
-  const $ = id => document.getElementById(id);
+  "use strict";
 
-  $("cloud-form").addEventListener("submit", async event => {
-    event.preventDefault();
-
-    const button = $("cloud-submit");
-    const status = $("cloud-status");
-    const result = $("cloud-result");
-    const action = $("cloud-action");
-
-    result.hidden = true;
-    action.hidden = true;
-    button.disabled = true;
-    status.textContent = "Memeriksa tautan...";
-
-    try {
-      const response = await fetch(API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: $("cloud-url").value.trim() })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.ok) {
-        throw new Error(data.error || "Tautan tidak dapat diperiksa.");
-      }
-
-      $("cloud-platform").textContent = data.platform;
-      $("cloud-message").textContent = data.message;
-      result.hidden = false;
-
-      if (data.directFile && data.directUrl) {
-        action.href = data.directUrl;
-        action.textContent = "Buka / coba unduh file video";
-        action.hidden = false;
-      } else if (data.officialPage) {
-        action.href = data.officialPage;
-        action.textContent = "Buka platform resmi";
-        action.hidden = false;
-      }
-
-      status.textContent = "Pemeriksaan selesai.";
-    } catch (error) {
-      status.textContent = "Gagal: " + error.message;
-    } finally {
-      button.disabled = false;
-    }
-  });
-})();
-</script>
-(() => {
   const API =
     "https://video-downloader-api.dham3830.workers.dev/api/inspect";
 
-  const form = document.getElementById("cloud-form");
-  const input = document.getElementById("cloud-url");
-  const button = document.getElementById("cloud-submit");
-  const status = document.getElementById("cloud-status");
-  const result = document.getElementById("cloud-result");
-  const platform = document.getElementById("cloud-platform");
-  const message = document.getElementById("cloud-message");
-
-  // Mendukung ID tombol dari versi frontend lama dan baru.
-  const action =
-    document.getElementById("cloud-action") ||
-    document.getElementById("cloud-official");
-
-  if (!form || !input || !button || !status ||
-      !result || !platform || !message || !action) {
-    console.error("Elemen HTML downloader belum lengkap.");
-    return;
-  }
+  const form = document.getElementById("download-form");
+  const input = document.getElementById("url");
+  const button = document.getElementById("check");
+  const status = document.getElementById("status");
+  const result = document.getElementById("result");
+  const heading = document.getElementById("heading");
+  const message = document.getElementById("message");
+  const action = document.getElementById("action");
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    status.textContent = "Sedang memeriksa URL...";
+    const raw = input.value.trim();
+
+    if (!raw) {
+      status.textContent = "Masukkan URL terlebih dahulu.";
+      return;
+    }
+
+    let parsed;
+
+    try {
+      parsed = new URL(raw);
+
+      if (parsed.protocol !== "https:") {
+        throw new Error("Gunakan URL yang dimulai dengan https://");
+      }
+
+      if (parsed.username || parsed.password) {
+        throw new Error("URL tidak boleh berisi informasi login.");
+      }
+    } catch (error) {
+      status.textContent =
+        error.message || "Format URL tidak valid.";
+      result.hidden = true;
+      return;
+    }
+
+    button.disabled = true;
+    status.textContent = "Memeriksa tautan...";
     result.hidden = true;
     action.hidden = true;
-    button.disabled = true;
+    action.removeAttribute("href");
 
     try {
       const response = await fetch(API, {
@@ -240,39 +238,59 @@ $("check").addEventListener("click", () => {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          url: input.value.trim()
-        })
+        body: JSON.stringify({ url: parsed.href })
       });
 
-      const data = await response.json();
+      let data;
+
+      try {
+        data = await response.json();
+      } catch {
+        throw new Error("Backend memberikan respons yang tidak valid.");
+      }
 
       if (!response.ok || !data.ok) {
         throw new Error(data.error || "URL tidak dapat diperiksa.");
       }
 
-      platform.textContent = data.platform;
-      message.textContent = data.message;
+      heading.textContent = data.directFile
+        ? "URL file video terdeteksi"
+        : "Platform terdeteksi: " + data.platform;
+
+      message.textContent = data.message || "Pemeriksaan selesai.";
 
       if (data.directFile && data.directUrl) {
-        action.href = data.directUrl;
-        action.textContent = "Buka / coba unduh file video";
-        action.hidden = false;
+        // Pastikan tautan hasil tetap HTTPS dan tanpa kredensial.
+        const direct = new URL(data.directUrl);
+
+        if (direct.protocol === "https:" &&
+            !direct.username && !direct.password) {
+          action.href = direct.href;
+          action.textContent = "Buka / coba unduh file video";
+          action.hidden = false;
+        }
       } else if (data.officialPage) {
-        action.href = data.officialPage;
-        action.textContent = "Buka platform resmi";
-        action.hidden = false;
+        const official = new URL(data.officialPage);
+
+        if (official.protocol === "https:") {
+          action.href = official.href;
+          action.textContent = "Buka platform resmi";
+          action.hidden = false;
+        }
       }
 
       result.hidden = false;
       status.textContent = "Pemeriksaan selesai.";
+      result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
     } catch (error) {
       status.textContent =
-        "Gagal memeriksa URL: " + error.message;
+        "Gagal memeriksa tautan: " + error.message;
     } finally {
       button.disabled = false;
     }
   });
 })();
+</script>
 </body>
 </html>
