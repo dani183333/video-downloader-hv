@@ -122,5 +122,87 @@ $("check").addEventListener("click", () => {
   $("result").scrollIntoView({behavior:"smooth"});
 });
 </script>
+<section id="cloud-checker" style="max-width:680px;margin:32px auto;padding:24px;font-family:Arial,sans-serif;background:#171923;color:#fff;border-radius:16px">
+  <h2 style="margin-top:0">Video URL Checker</h2>
+  <p>Masukkan tautan YouTube, Facebook, atau TikTok.</p>
+
+  <form id="cloud-form">
+    <input
+      id="cloud-url"
+      type="url"
+      placeholder="https://..."
+      required
+      maxlength="2048"
+      style="box-sizing:border-box;width:100%;padding:14px;border-radius:8px;border:1px solid #555;margin:8px 0 12px"
+    />
+
+    <button
+      id="cloud-submit"
+      type="submit"
+      style="width:100%;padding:14px;border:0;border-radius:8px;background:#7c5cff;color:white;font-weight:bold;cursor:pointer"
+    >Periksa URL</button>
+  </form>
+
+  <p id="cloud-status" role="status" aria-live="polite"></p>
+  <div id="cloud-result" hidden>
+    <p>Platform: <strong id="cloud-platform"></strong></p>
+    <p id="cloud-message"></p>
+    <a id="cloud-official" href="#" target="_blank" rel="noopener noreferrer" hidden>
+      Buka platform resmi
+    </a>
+  </div>
+</section>
+
+<script>
+(() => {
+  const API = "https://video-downloader-api.dham3830.workers.dev/api/inspect";
+
+  const form = document.getElementById("cloud-form");
+  const input = document.getElementById("cloud-url");
+  const button = document.getElementById("cloud-submit");
+  const status = document.getElementById("cloud-status");
+  const result = document.getElementById("cloud-result");
+  const platform = document.getElementById("cloud-platform");
+  const message = document.getElementById("cloud-message");
+  const official = document.getElementById("cloud-official");
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    status.textContent = "Sedang memeriksa URL...";
+    result.hidden = true;
+    official.hidden = true;
+    button.disabled = true;
+
+    try {
+      const response = await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: input.value.trim() })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.ok) {
+        throw new Error(data.error || "URL tidak dapat diperiksa.");
+      }
+
+      platform.textContent = data.platform;
+      message.textContent = data.message;
+      official.href = data.officialPage;
+      official.hidden = false;
+      result.hidden = false;
+      status.textContent = "URL berhasil diperiksa.";
+    } catch (error) {
+      status.textContent =
+        "Gagal menghubungi backend. Periksa koneksi atau konfigurasi Worker. " +
+        error.message;
+    } finally {
+      button.disabled = false;
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
