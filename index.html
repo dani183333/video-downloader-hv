@@ -2,182 +2,306 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#111827">
-  <meta name="description" content="Periksa tautan video dan temukan pilihan akses atau pengunduhan yang tersedia secara resmi.">
-  <title>Video Downloader HV</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101322">
+<meta name="description" content="Periksa tautan video dan coba unduh file video langsung yang diizinkan sumbernya.">
+<title>Video Downloader HV</title>
 
-  <style>
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      background: #0b1020;
-      color: #f8fafc;
-      font-family: Arial, sans-serif;
-      min-height: 100vh;
-    }
-
-    main {
-      max-width: 680px;
-      margin: auto;
-      padding: 32px 18px;
-    }
-
-    header {
-      text-align: center;
-      margin: 24px 0 32px;
-    }
-
-    .logo { font-size: 42px; }
-
-    h1 { font-size: 32px; margin: 12px 0; }
-
-    p { color: #aab6cc; line-height: 1.6; }
-
-    .card {
-      background: #151e31;
-      border: 1px solid #29364e;
-      border-radius: 18px;
-      padding: 22px;
-      margin: 18px 0;
-    }
-
-    input {
-      width: 100%;
-      padding: 15px;
-      border-radius: 10px;
-      border: 1px solid #42516b;
-      background: #0b1020;
-      color: white;
-      font-size: 16px;
-      margin-top: 10px;
-    }
-
-    button, .link {
-      display: block;
-      width: 100%;
-      padding: 14px;
-      border: 0;
-      border-radius: 10px;
-      background: #60a5fa;
-      color: #08111f;
-      font-size: 16px;
-      font-weight: bold;
-      text-align: center;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    button { margin-top: 12px; }
-
-    button:disabled {
-      opacity: .6;
-      cursor: wait;
-    }
-
-    .platforms {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .pill {
-      background: #26344b;
-      color: #dbeafe;
-      border-radius: 20px;
-      padding: 8px 12px;
-      font-size: 13px;
-    }
-
-    .note, footer {
-      font-size: 13px;
-      color: #aab6cc;
-    }
-
-    #result[hidden], #action[hidden] { display: none; }
-
-    .link { margin-top: 14px; }
-
-    footer {
-      text-align: center;
-      color: #8290a7;
-      padding: 20px 0;
-      line-height: 1.6;
-    }
-
-    a:focus-visible, button:focus-visible, input:focus-visible {
-      outline: 2px solid #93c5fd;
-      outline-offset: 3px;
-    }
-  </style>
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #101322;
+  --panel: #191e30;
+  --panel2: #222940;
+  --border: #303951;
+  --text: #f5f7ff;
+  --muted: #aab4ca;
+  --primary: #8b7cff;
+  --primary2: #6c5ce7;
+  --green: #4ade80;
+  --red: #fb7185;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at top, #25244a 0%, transparent 48%),
+    var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+}
+button, input { font: inherit; }
+.container {
+  width: min(100% - 32px, 720px);
+  margin: auto;
+}
+header {
+  text-align: center;
+  padding: 44px 0 26px;
+}
+.logo {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 22px;
+  background: linear-gradient(135deg, var(--primary), #4f46e5);
+  box-shadow: 0 12px 38px #6c5ce744;
+  font-size: 34px;
+}
+h1 {
+  margin: 0;
+  font-size: clamp(28px, 6vw, 40px);
+  letter-spacing: -1.3px;
+}
+.subtitle {
+  max-width: 520px;
+  margin: 12px auto 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.platforms {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 26px 0;
+}
+.platform {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 54px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: #191e30cc;
+  color: var(--text);
+  font-weight: 650;
+}
+.platform span { font-size: 19px; }
+.card {
+  padding: 23px;
+  margin: 16px 0;
+  border: 1px solid var(--border);
+  border-radius: 19px;
+  background: var(--panel);
+  box-shadow: 0 12px 40px #00000018;
+}
+.card h2, .card h3 { margin: 0 0 10px; }
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+.input-wrap {
+  display: flex;
+  gap: 9px;
+}
+input {
+  width: 100%;
+  min-width: 0;
+  padding: 15px;
+  color: var(--text);
+  background: #101525;
+  border: 1px solid #3b4661;
+  border-radius: 12px;
+  outline: none;
+}
+input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px #8b7cff22;
+}
+button, .action {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  min-height: 49px;
+  padding: 13px 18px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary), var(--primary2));
+  color: white;
+  font-weight: 750;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity .15s, transform .15s;
+}
+button:hover, .action:hover {
+  opacity: .92;
+  transform: translateY(-1px);
+}
+button:disabled { opacity: .55; cursor: wait; }
+.full { width: 100%; margin-top: 12px; }
+.secondary {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+}
+.hint, .muted {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.65;
+}
+#status {
+  min-height: 20px;
+  margin: 12px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+#result[hidden] { display: none; }
+.result-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 13px;
+  border-radius: 13px;
+  background: #8b7cff20;
+  font-size: 22px;
+}
+.result-message {
+  color: var(--muted);
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.result-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+.result-actions a[hidden] { display: none; }
+.steps {
+  display: grid;
+  gap: 17px;
+  margin-top: 18px;
+}
+.step {
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+}
+.number {
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: #8b7cff20;
+  color: #c4baff;
+  font-weight: 800;
+}
+.step p { margin: 3px 0 0; }
+footer {
+  padding: 20px 0 36px;
+  color: #8c96ad;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.8;
+}
+@media (max-width: 520px) {
+  header { padding-top: 32px; }
+  .platforms { gap: 7px; }
+  .platform { flex-direction: column; gap: 4px; font-size: 12px; }
+  .card { padding: 18px; }
+  .input-wrap { flex-direction: column; }
+  .input-wrap button { width: 100%; }
+}
+</style>
 </head>
 
 <body>
-<main>
+<main class="container">
   <header>
-    <div class="logo" aria-hidden="true">⬇️</div>
-    <h1>Video Downloader HV</h1>
-    <p>
-      Tempel tautan video untuk mengenali platform
-      dan mencoba akses yang tersedia secara sah.
+    <div class="logo" aria-hidden="true">↓</div>
+    <h1>Video Downloader <span style="color:#a99cff">HV</span></h1>
+    <p class="subtitle">
+      Tempel tautan video untuk memeriksa sumber dan pilihan aksesnya.
+      Praktis, gratis, dan bisa dibuka dari HP maupun komputer.
     </p>
-
-    <div class="platforms">
-      <span class="pill">YouTube</span>
-      <span class="pill">Facebook</span>
-      <span class="pill">TikTok</span>
-      <span class="pill">URL video langsung</span>
-    </div>
   </header>
+
+  <div class="platforms" aria-label="Platform yang dikenali">
+    <div class="platform"><span>▶</span> YouTube</div>
+    <div class="platform"><span>♪</span> TikTok</div>
+    <div class="platform"><span>f</span> Facebook</div>
+  </div>
 
   <section class="card">
     <form id="download-form">
-      <label for="url"><strong>Tautan video</strong></label>
-      <p class="note">
-        Masukkan URL publik. Tidak perlu memasukkan kata sandi.
+      <label for="url">Masukkan tautan video</label>
+      <div class="input-wrap">
+        <input
+          id="url"
+          type="url"
+          placeholder="https://..."
+          maxlength="2048"
+          autocomplete="url"
+          required
+        >
+        <button id="check" type="submit">Periksa ↗</button>
+      </div>
+      <p class="hint">
+        Mendukung pemeriksaan link YouTube, TikTok, Facebook,
+        dan URL file video langsung seperti MP4 atau WebM.
       </p>
-
-      <input
-        id="url"
-        name="url"
-        type="url"
-        placeholder="https://..."
-        maxlength="2048"
-        autocomplete="url"
-        required
-      >
-
-      <button id="check" type="submit">Periksa tautan</button>
-      <p id="status" class="note" role="status" aria-live="polite"></p>
+      <button class="secondary full" id="clear" type="button">
+        Bersihkan tautan
+      </button>
+      <p id="status" role="status" aria-live="polite"></p>
     </form>
   </section>
 
-  <section id="result" class="card" aria-live="polite" hidden>
+  <section class="card" id="result" aria-live="polite" hidden>
+    <div class="result-icon" id="result-icon">✓</div>
     <h2 id="heading">Hasil pemeriksaan</h2>
-    <p id="message"></p>
-    <a
-      id="action"
-      class="link"
-      href="#"
-      target="_blank"
-      rel="noopener noreferrer"
-      hidden
-    >Buka tautan</a>
+    <p class="result-message" id="message"></p>
+    <div class="result-actions">
+      <a id="action" class="action" href="#" hidden>
+        Buka video
+      </a>
+      <a id="download-action" class="action" href="#" hidden>
+        Coba unduh file
+      </a>
+    </div>
   </section>
 
   <section class="card">
-    <h3>Cara kerja</h3>
-    <p>1. Tempel tautan video.</p>
-    <p>2. Backend memeriksa jenis URL.</p>
-    <p>3. Untuk file video langsung, coba unduh jika server sumber mengizinkan. Link platform sosial akan dibuka di situs resminya.</p>
+    <h3>Cara menggunakan</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="number">1</div>
+        <div>
+          <strong>Salin tautan</strong>
+          <p class="muted">Salin alamat video dari platform atau URL file video langsung.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="number">2</div>
+        <div>
+          <strong>Periksa tautan</strong>
+          <p class="muted">Sistem mengenali platform atau format URL file.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="number">3</div>
+        <div>
+          <strong>Buka atau coba unduh</strong>
+          <p class="muted">Unduhan langsung bergantung pada izin dan dukungan server sumber.</p>
+        </div>
+      </div>
+    </div>
   </section>
 
   <footer>
-    Gunakan hanya konten yang kamu miliki atau diizinkan untuk diunduh.
-    Website ini tidak menyimpan URL ke server sebagai riwayat.
+    Video Downloader HV · Tidak meminta kata sandi atau cookie akun.<br>
+    Gunakan hanya video yang kamu miliki atau yang memang diizinkan
+    untuk diunduh. Link platform sosial tidak otomatis menghasilkan file MP4.
   </footer>
 </main>
 
@@ -191,116 +315,126 @@
   const form = document.getElementById("download-form");
   const input = document.getElementById("url");
   const button = document.getElementById("check");
+  const clear = document.getElementById("clear");
   const status = document.getElementById("status");
   const result = document.getElementById("result");
   const heading = document.getElementById("heading");
   const message = document.getElementById("message");
+  const icon = document.getElementById("result-icon");
   const action = document.getElementById("action");
+  const downloadAction = document.getElementById("download-action");
+
+  function hideActions() {
+    for (const link of [action, downloadAction]) {
+      link.hidden = true;
+      link.removeAttribute("href");
+      link.removeAttribute("download");
+    }
+  }
+
+  function validHttps(value) {
+    const parsed = new URL(value);
+    if (parsed.protocol !== "https:" ||
+        parsed.username || parsed.password) {
+      throw new Error("Gunakan tautan HTTPS yang valid tanpa informasi login.");
+    }
+    return parsed;
+  }
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const raw = input.value.trim();
-
-    if (!raw) {
-      status.textContent = "Masukkan URL terlebih dahulu.";
-      return;
-    }
-
-    let parsed;
-
+    let original;
     try {
-      parsed = new URL(raw);
-
-      if (parsed.protocol !== "https:") {
-        throw new Error("Gunakan URL yang dimulai dengan https://");
-      }
-
-      if (parsed.username || parsed.password) {
-        throw new Error("URL tidak boleh berisi informasi login.");
-      }
+      original = validHttps(input.value.trim());
     } catch (error) {
-      status.textContent =
-        error.message || "Format URL tidak valid.";
+      status.textContent = error.message || "Tautan tidak valid.";
       result.hidden = true;
       return;
     }
 
     button.disabled = true;
-    status.textContent = "Memeriksa tautan...";
+    status.textContent = "Sedang memeriksa tautan...";
     result.hidden = true;
-    action.hidden = true;
-    action.removeAttribute("href");
+    hideActions();
 
     try {
       const response = await fetch(API, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ url: parsed.href })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: original.href })
       });
 
       let data;
-
       try {
         data = await response.json();
       } catch {
-        throw new Error("Backend memberikan respons yang tidak valid.");
+        throw new Error("Server memberikan respons yang tidak valid.");
       }
 
       if (!response.ok || !data.ok) {
-        throw new Error(data.error || "URL tidak dapat diperiksa.");
-      }
-
-      heading.textContent = data.directFile
-        ? "URL file video terdeteksi"
-        : "Platform terdeteksi: " + data.platform;
-
-      message.textContent = data.message || "Pemeriksaan selesai.";
-
-      if (data.directFile && data.directUrl) {
-        // Tautan langsung: browser dapat mengunduhnya jika server sumber
-        // mengizinkan. Atribut download hanya permintaan, bukan jaminan.
-        const direct = new URL(data.directUrl);
-
-        if (direct.protocol === "https:" &&
-            !direct.username && !direct.password) {
-          action.href = direct.href;
-          action.removeAttribute("target");
-          action.setAttribute("download", "");
-          action.textContent = "Coba unduh file video";
-          action.hidden = false;
-
-          message.textContent =
-            (data.message || "URL file video terdeteksi.") +
-            " Jika video hanya terbuka di tab baru, server sumber mungkin " +
-            "tidak mengizinkan unduhan lintas situs. Gunakan menu unduh " +
-            "pada pemutar atau situs sumber jika tersedia.";
-        }
-      } else if (data.officialPage) {
-        const official = new URL(data.officialPage);
-
-        if (official.protocol === "https:" &&
-            !official.username && !official.password) {
-          action.href = official.href;
-          action.setAttribute("target", "_blank");
-          action.removeAttribute("download");
-          action.textContent = "Buka video di platform";
-          action.hidden = false;
-        }
+        throw new Error(data.error || "Tautan tidak dapat diperiksa.");
       }
 
       result.hidden = false;
+
+      if (data.directFile && data.directUrl) {
+        const direct = validHttps(data.directUrl);
+
+        heading.textContent = "URL file video terdeteksi";
+        icon.textContent = "↓";
+        message.textContent =
+          "Sistem mengenali URL sebagai file video. Tekan tombol di bawah " +
+          "untuk mencoba mengunduhnya. Jika video hanya terbuka di tab baru, " +
+          "server sumber mungkin tidak mengizinkan unduhan lintas situs.";
+
+        downloadAction.href = direct.href;
+        downloadAction.setAttribute("download", "");
+        downloadAction.textContent = "↓  Coba unduh file video";
+        downloadAction.hidden = false;
+
+        action.href = direct.href;
+        action.target = "_blank";
+        action.rel = "noopener noreferrer";
+        action.textContent = "Buka / putar video";
+        action.hidden = false;
+      } else {
+        heading.textContent = "Platform berhasil dikenali";
+        icon.textContent = "✓";
+        message.textContent =
+          data.message ||
+          "Tautan platform dikenali, tetapi file video belum diperoleh. " +
+          "Pemeriksaan link tidak sama dengan pengunduhan file.";
+
+        // Buka video asli yang dimasukkan pengguna, bukan beranda platform.
+        action.href = original.href;
+        action.target = "_blank";
+        action.rel = "noopener noreferrer";
+        action.textContent = "↗  Buka video asli";
+        action.hidden = false;
+      }
+
       status.textContent = "Pemeriksaan selesai.";
       result.scrollIntoView({ behavior: "smooth", block: "nearest" });
-
     } catch (error) {
-      status.textContent =
-        "Gagal memeriksa tautan: " + error.message;
+      result.hidden = false;
+      heading.textContent = "Pemeriksaan gagal";
+      icon.textContent = "!";
+      message.textContent =
+        error.message ||
+        "Tidak dapat menghubungi server. Periksa koneksi lalu coba lagi.";
+      status.textContent = "Tautan belum berhasil diperiksa.";
     } finally {
       button.disabled = false;
     }
+  });
+
+  clear.addEventListener("click", () => {
+    input.value = "";
+    status.textContent = "";
+    result.hidden = true;
+    hideActions();
+    input.focus();
   });
 })();
 </script>
