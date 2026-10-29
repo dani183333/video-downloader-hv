@@ -122,38 +122,87 @@ $("check").addEventListener("click", () => {
   $("result").scrollIntoView({behavior:"smooth"});
 });
 </script>
+
 <section id="cloud-checker" style="max-width:680px;margin:32px auto;padding:24px;font-family:Arial,sans-serif;background:#171923;color:#fff;border-radius:16px">
-  <h2 style="margin-top:0">Video URL Checker</h2>
-  <p>Masukkan tautan YouTube, Facebook, atau TikTok.</p>
+  <h2>Video Downloader HV</h2>
+  <p>Periksa tautan platform atau URL file video langsung.</p>
 
   <form id="cloud-form">
-    <input
-      id="cloud-url"
-      type="url"
-      placeholder="https://..."
-      required
-      maxlength="2048"
-      style="box-sizing:border-box;width:100%;padding:14px;border-radius:8px;border:1px solid #555;margin:8px 0 12px"
-    />
-
-    <button
-      id="cloud-submit"
-      type="submit"
-      style="width:100%;padding:14px;border:0;border-radius:8px;background:#7c5cff;color:white;font-weight:bold;cursor:pointer"
-    >Periksa URL</button>
+    <input id="cloud-url" type="url" required maxlength="2048"
+      placeholder="Tempel URL video di sini"
+      style="box-sizing:border-box;width:100%;padding:14px;border-radius:8px;border:1px solid #555;margin:8px 0 12px" />
+    <button id="cloud-submit" type="submit"
+      style="width:100%;padding:14px;border:0;border-radius:8px;background:#7c5cff;color:white;font-weight:bold">
+      Periksa tautan
+    </button>
   </form>
 
   <p id="cloud-status" role="status" aria-live="polite"></p>
+
   <div id="cloud-result" hidden>
-    <p>Platform: <strong id="cloud-platform"></strong></p>
+    <p>Jenis tautan: <strong id="cloud-platform"></strong></p>
     <p id="cloud-message"></p>
-    <a id="cloud-official" href="#" target="_blank" rel="noopener noreferrer" hidden>
-      Buka platform resmi
-    </a>
+    <a id="cloud-action" target="_blank" rel="noopener noreferrer"
+      style="display:inline-block;padding:12px;background:#257a50;color:white;border-radius:8px"
+      hidden>Buka tautan</a>
   </div>
 </section>
 
 <script>
+(() => {
+  const API = "https://video-downloader-api.dham3830.workers.dev/api/inspect";
+  const $ = id => document.getElementById(id);
+
+  $("cloud-form").addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const button = $("cloud-submit");
+    const status = $("cloud-status");
+    const result = $("cloud-result");
+    const action = $("cloud-action");
+
+    result.hidden = true;
+    action.hidden = true;
+    button.disabled = true;
+    status.textContent = "Memeriksa tautan...";
+
+    try {
+      const response = await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: $("cloud-url").value.trim() })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.ok) {
+        throw new Error(data.error || "Tautan tidak dapat diperiksa.");
+      }
+
+      $("cloud-platform").textContent = data.platform;
+      $("cloud-message").textContent = data.message;
+      result.hidden = false;
+
+      if (data.directFile && data.directUrl) {
+        action.href = data.directUrl;
+        action.textContent = "Buka / coba unduh file video";
+        action.hidden = false;
+      } else if (data.officialPage) {
+        action.href = data.officialPage;
+        action.textContent = "Buka platform resmi";
+        action.hidden = false;
+      }
+
+      status.textContent = "Pemeriksaan selesai.";
+    } catch (error) {
+      status.textContent = "Gagal: " + error.message;
+    } finally {
+      button.disabled = false;
+    }
+  });
+})();
+</script>
+
 (() => {
   const API = "https://video-downloader-api.dham3830.workers.dev/api/inspect";
 
