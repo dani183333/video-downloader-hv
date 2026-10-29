@@ -203,9 +203,9 @@ $("check").addEventListener("click", () => {
   });
 })();
 </script>
-
 (() => {
-  const API = "https://video-downloader-api.dham3830.workers.dev/api/inspect";
+  const API =
+    "https://video-downloader-api.dham3830.workers.dev/api/inspect";
 
   const form = document.getElementById("cloud-form");
   const input = document.getElementById("cloud-url");
@@ -214,21 +214,35 @@ $("check").addEventListener("click", () => {
   const result = document.getElementById("cloud-result");
   const platform = document.getElementById("cloud-platform");
   const message = document.getElementById("cloud-message");
-  const official = document.getElementById("cloud-official");
+
+  // Mendukung ID tombol dari versi frontend lama dan baru.
+  const action =
+    document.getElementById("cloud-action") ||
+    document.getElementById("cloud-official");
+
+  if (!form || !input || !button || !status ||
+      !result || !platform || !message || !action) {
+    console.error("Elemen HTML downloader belum lengkap.");
+    return;
+  }
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     status.textContent = "Sedang memeriksa URL...";
     result.hidden = true;
-    official.hidden = true;
+    action.hidden = true;
     button.disabled = true;
 
     try {
       const response = await fetch(API, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: input.value.trim() })
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          url: input.value.trim()
+        })
       });
 
       const data = await response.json();
@@ -239,20 +253,26 @@ $("check").addEventListener("click", () => {
 
       platform.textContent = data.platform;
       message.textContent = data.message;
-      official.href = data.officialPage;
-      official.hidden = false;
+
+      if (data.directFile && data.directUrl) {
+        action.href = data.directUrl;
+        action.textContent = "Buka / coba unduh file video";
+        action.hidden = false;
+      } else if (data.officialPage) {
+        action.href = data.officialPage;
+        action.textContent = "Buka platform resmi";
+        action.hidden = false;
+      }
+
       result.hidden = false;
-      status.textContent = "URL berhasil diperiksa.";
+      status.textContent = "Pemeriksaan selesai.";
     } catch (error) {
       status.textContent =
-        "Gagal menghubungi backend. Periksa koneksi atau konfigurasi Worker. " +
-        error.message;
+        "Gagal memeriksa URL: " + error.message;
     } finally {
       button.disabled = false;
     }
   });
 })();
-</script>
-
 </body>
 </html>
