@@ -76,7 +76,8 @@ untuk diunduh. Website ini tidak menyimpan URL ke server.
 </footer>
 </main>
 <script>
-const $ = id => document.getElementById(id);
+const API =
+  "https://video-downloader-api.dham3830.workers.dev/api/inspect";
 
 $("check").addEventListener("click", () => {
   const raw = $("url").value.trim();
